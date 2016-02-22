@@ -20,8 +20,9 @@ var Calendar = Calendar || {
 		var options={};
 		var switches=_.filter(tokens, function(tok){
 			return null != tok.match(/^--/);
-		});s
+		});
 		_.each(switches,function(s){
+			log(s);
 			switch(s)
 			{
 				case '--lunar': options.showLunarPhases=true; break;
@@ -73,6 +74,60 @@ var Calendar = Calendar || {
 						'Summer',
 						'Fall',
 						'Winter'],
+					RandomWeather:[
+						//Spring Weather
+						[
+							'test1',
+							'test2',
+							'test3',
+							'test4',
+							'test5',
+							'test6',
+							'test7',
+							'test8',
+							'test9',
+							'test10'
+						],
+						//Summer Weather
+						[
+							'test11',
+							'test12',
+							'test13',
+							'test14',
+							'test15',
+							'test16',
+							'test17',
+							'test18',
+							'test19',
+							'test20'
+						],
+						//Fall Weather
+						[
+							'test21',
+							'test22',
+							'test23',
+							'test24',
+							'test25',
+							'test26',
+							'test27',
+							'test28',
+							'test29',
+							'test30'
+						],
+						//Winter Weather
+						[
+							'test31',
+							'test32',
+							'test33',
+							'test34',
+							'test35',
+							'test36',
+							'test37',
+							'test38',
+							'test39',
+							'test40'
+						]
+					],
 					yearPrefix: 'DR '
 				}
 			}
@@ -98,12 +153,11 @@ var Calendar = Calendar || {
 		y+=_y;
 		
 		n.year+=y;
-		
+
 		state.Calendar.now=n;
 	},
 	
 	RemoveDays: function(days){
-		var s = n.season;
 		var y=Math.floor(days/336);
 		days-=(y*336);
 		var m = Math.floor(days/28);
@@ -122,35 +176,53 @@ var Calendar = Calendar || {
 		y+=_y;
 		
 		n.year-=y;
-
-		n.season=s;
 		
 		state.Calendar.now=n;
 	},
 
 	_GetSeasonOfYear: function(d,options){
-		 var opt=_.defaults((options||{}),{
+		var opt=_.defaults((options||{}),{
 		});
-		
-		var n=state.Calendar.now;
+
 		var s=state.Calendar.setting;
 		
-		if(n.month == 1 || n.month == 2 || n.month == 3)
-		{
+		if(d.month == 1 || d.month == 2 || d.month == 3){
+
 			n.season = 'Spring';
 			return s.seasonOfTheYear[0];
-		}
-		else if (n.month == 4 || n.month == 5 || n.month == 6){
+
+		}else if (d.month == 4 || d.month == 5 || d.month == 6){
+			
 			n.season = 'Summer';
 			return s.seasonOfTheYear[1];
-		}
-		else if (n.month == 7 || n.month == 8 || n.month == 9){
+
+		}else if (d.month == 7 || d.month == 8 || d.month == 9){
+			
 			n.season = 'Fall';
 			return s.seasonOfTheYear[2];
+
 		}
 		else{
 			n.season = 'Winter';
 			return s.seasonOfTheYear[3];
+		}
+	},
+
+	_GetWeather: function(d,options){
+		 var opt=_.defaults((options||{}),{
+		});
+		var s=d.season;
+		var w=state.Calendar.setting;
+		var m=Math.floor((Math.random() * 10) + 1);
+		
+		if(s == 'Spring'){
+			return w.RandomWeather[0][m];
+		}else if (s == 'Summer'){
+			return w.RandomWeather[1][m];
+		}else if (s == 'Fall'){
+			return w.RandomWeather[2][m];
+		}else{
+			return w.RandomWeather[3][m];
 		}
 	},
 	
@@ -172,7 +244,7 @@ var Calendar = Calendar || {
 		});
 		
 		var n=state.Calendar.now;
-		var img = Calendar._GetPhaseForDate(d,opt)
+		var img = Calendar._GetPhaseForDate(d,opt);
 		
 		if(d.year == n.year && d.month == n.month && d.day == n.day)
 		{
@@ -318,6 +390,27 @@ var Calendar = Calendar || {
 			+'</div>'
 			);
 	},
+
+	ShowWeather: function(d,options) {
+		var opt=_.defaults((options||{}),{
+			showLunarPhases: true
+		});
+		sendChat('','/direct '
+			+'<div style=\''
+					+'color: white;'
+					+'padding: 5px 5px;'
+					+'background-color: #FFA500;'
+					+'font-weight: bold;'
+					+'font-family: Baskerville, "Baskerville Old Face", "Goudy Old Style", Garamond, "Times New Roman", serif;'
+					+'border: 3px solid #999999;'
+					+'text-align: center;'
+					+'\'>'
+				+Calendar._GetPhaseForDate(d,opt)
+				+' '
+				+Calendar._GetWeather(d,opt)
+			+'</div>'
+			);
+	},
 	
 	ShowMonth: function(d,options){
 		var opt=_.defaults((options||{}),{
@@ -366,6 +459,10 @@ var Calendar = Calendar || {
 
 			case 'season':
 				Calendar.ShowSeason(state.Calendar.now,options);
+				break;
+
+			case 'weather':
+				Calendar.ShowWeather(state.Calendar.now,options);
 				break;
 			
 		}
