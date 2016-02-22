@@ -1,5 +1,5 @@
 var Calendar = Calendar || {
-	version: 1.5,
+	version: 2.0,
 	lunarPhaseSize: 15,
 	lunarPhasesImage: 'https://s3.amazonaws.com/files.d20.io/images/4277527/CJJWBbiHx3jHglPdccPx3A/max.png?1401939451',
 	clearImage: 'https://s3.amazonaws.com/files.d20.io/images/4277467/iQYjFOsYC5JsuOPUCI9RGA/max.png?1401938659',
@@ -213,7 +213,7 @@ var Calendar = Calendar || {
 		});
 		var s=d.season;
 		var w=state.Calendar.setting;
-		var m=Math.floor((Math.random() * 10) + 1);
+		var m=Math.floor((Math.random() * 9) + 0);
 		
 		if(s == 'Spring'){
 			return w.RandomWeather[0][m];
