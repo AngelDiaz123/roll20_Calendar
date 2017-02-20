@@ -19,6 +19,6 @@
 
 
 ## Switches:
-** !cal --lunar ** -- shows lunar phases
+**!cal --lunar** -- shows lunar phases
 
-** !cal --nolunar ** -- hides lunar phases
+**!cal --nolunar** -- hides lunar phases
